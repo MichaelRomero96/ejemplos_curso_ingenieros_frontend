@@ -3,14 +3,15 @@ import { getDefaultNormalizer } from "@testing-library/react";
 import { useEffect, useState } from "react";
 import { loginStyles } from "../styles/loginStyles"
 
-export default function Login() {
+export default function Login({ users }) {
     const classes = loginStyles();
+    console.log(users)
     const users_db = [
         { email: 'jorge@gmail.com', password: '123456' },
         { email: 'maria@hotmail.com', password: 'maria123' }
     ]
     const [validation, setValidation] = useState({
-        email: false,
+        email: true,
         password: false
     });
     const [errors, setErrors] = useState({
@@ -23,18 +24,22 @@ export default function Login() {
     });
     const { email, password } = user;
     useEffect(() => {
-        let object = users_db.filter(item => item.email === email);
+        let object = users.filter(item => item.email === email);
         let emailValidation = object[0];
+        console.log(emailValidation)
         if (emailValidation?.length !== 0) {
-            setValidation({ ...validation, email: true });
-            if (emailValidation?.password === password) {
-                console.log('si es el password del usuario')
+            // setValidation({ ...validation, email: true });
+            if (emailValidation?.username === password) {
+                console.log('si es el password del usuario');
+                setValidation({ ...validation, password: true });
             } else {
-                console.log('No es el password del usuario')
+                console.log('No es el password del usuario');
+                setValidation({ ...validation, password: false });
             }
-        } else {
-            setValidation({ ...validation, email: false });
-        }
+        } 
+        // else {
+        //     setValidation({ ...validation, email: false });
+        // }
     }, [user]);
     const handleChange = (e) => {
         setUser({
