@@ -6,8 +6,10 @@ import { loginStyles } from "../styles/loginStyles"
 
 //googleAPI Credentials
 import { GoogleLogin } from 'react-google-login';
+//FacebookAPI Credentials
+import FacebookLogin from 'react-facebook-login';
 
-export default function Login({ setCheckLogin, setGoogleUserData, googleUserData }) {
+export default function Login({ setCheckLogin, setGoogleUserData, googleUserData, setFbUserData }) {
 
     const classes = loginStyles();
     const history = useHistory();
@@ -68,19 +70,33 @@ export default function Login({ setCheckLogin, setGoogleUserData, googleUserData
         } else {
             alert('Correo o contraseña inválidos')
         }
-    };    
+    };
     const responseGoogle = (data) => {
-        console.log(data);
-        return setGoogleUserData(data.profileObj);
-
+        if (data.profileObj?.length !== 0) {
+            console.log(data);
+            return saveData(data.profileObj);
+        }
+        else {
+            return saveData('error');
+        }
+    }
+    const saveData = (data) => {
+        if (data) {
+            setCheckLogin(true);
+            setGoogleUserData(data)
+            history.push('/');
+        }
+    }
+    const responseFacebook = (response) => {
+        console.log(response);
+        return saveFbData(response);
+    }
+    const saveFbData = (response) => {
+        setCheckLogin(true);
+        setFbUserData(response)
+        history.push('/');
     }
 
-    useEffect(() => {
-      if(googleUserData?.profileObj.length !== 0) {
-          setCheckLogin(true);
-          history.push('/')
-      }
-    }, [googleUserData])
 
     return (
         <Grid container justify='center' className={classes.root}>
@@ -129,6 +145,14 @@ export default function Login({ setCheckLogin, setGoogleUserData, googleUserData
                                             onFailure={responseGoogle}
                                             cookiePolicy={'single_host_origin'}
                                         />
+                                    </Grid>
+                                    <Grid item md={12} sm={12} xs={12} className={classes.apisText}>
+                                        <FacebookLogin
+                                            appId="512861893391443"
+                                            autoLoad={false}
+                                            fields="name,email,picture"
+                                            // onClick={componentClicked}
+                                            callback={responseFacebook} />
                                     </Grid>
                                 </Grid>
                             </Grid>

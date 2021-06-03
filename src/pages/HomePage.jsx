@@ -2,16 +2,17 @@ import { useEffect } from "react"
 import { useHistory } from "react-router-dom";
 
 
-export default function HomePage({ checkLogin, setCheckLogin, googleUserData }) {
+export default function HomePage({ checkLogin, setCheckLogin, googleUserData, fbUserData }) {
 
     const history = useHistory();
 
     useEffect(() => {
-        if (checkLogin === false) {
-            // history.push('/auth')
+        if (!checkLogin) {
+            history.push('/auth')
         }
+        console.log(googleUserData);
+        console.log(fbUserData);
     }, []);
-    console.log(googleUserData)
 
     return (
         <>
@@ -20,7 +21,9 @@ export default function HomePage({ checkLogin, setCheckLogin, googleUserData }) 
                     <h1>
                         Página Principal
                     </h1>
-                    {/* <img src={googleUserData.} alt="" /> */}
+                    <div>
+                        <img src={fbUserData.picture.data.url} alt="imagen de perfil" />
+                    </div>
                 </>
                 :
                 null
